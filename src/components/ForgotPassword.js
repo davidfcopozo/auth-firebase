@@ -1,24 +1,26 @@
 import React, { useRef, useState } from "react";
 import { Form, Card, Button, Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export const ForgotPassword = () => {
   const emailRef = useRef();
-  const { login } = useAuth();
+  const { resetPassword } = useAuth();
   const [error, setError] = useState();
+  const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
       setError("");
+      setMessage("");
       setLoading(true);
-      navigate("/");
+      await resetPassword(emailRef.current.value);
+      setMessage("Check your email for further instructions");
     } catch {
-      setError("Failed to sign in");
+      setError("Failed to reset the password");
     }
     setLoading(false);
   }
@@ -30,6 +32,11 @@ export const ForgotPassword = () => {
           {error && (
             <Alert variant="danger" className="text-center">
               {error}
+            </Alert>
+          )}
+          {message && (
+            <Alert variant="success" className="text-center">
+              {message}
             </Alert>
           )}
           <Form onSubmit={handleSubmit}>

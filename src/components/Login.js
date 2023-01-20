@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 export const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login } = useAuth();
+  const { login, githupSingIn } = useAuth();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,11 +19,32 @@ export const Login = () => {
       setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
       navigate("/");
+    } catch (error) {
+      console.log(error.code);
+      if (error.code === "auth/wrong-password") {
+        setError("Wrong password");
+      } else if (error.code === "auth/user-not-found") {
+        setError("User not found");
+      } else if (error.code) {
+        setError("Something went wrong, please try again");
+      }
+    }
+    setLoading(false);
+  }
+
+  async function handleGithupSubmit(e) {
+    e.preventDefault();
+    try {
+      setError("");
+      setLoading(true);
+      await githupSingIn();
+      navigate("/");
     } catch {
       setError("Failed to sign in");
     }
     setLoading(false);
   }
+
   return (
     <>
       <Card>
@@ -57,6 +78,14 @@ export const Login = () => {
           </div>
         </Card.Body>
       </Card>
+      <Button
+        type="submit"
+        className="w-100 mt-2"
+        onClick={handleGithupSubmit}
+        disabled={loading}
+      >
+        Github
+      </Button>
       <div className="w-100 text-center mt-2">
         Don't have an account yet? <Link to="/signup">Sign up</Link>
       </div>

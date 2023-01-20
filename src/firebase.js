@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GithubAuthProvider } from "firebase/auth";
 const {
   REACT_APP_FIREBASE_API_KEY,
   REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -23,7 +23,7 @@ const firebaseConfig = {
   appId: REACT_APP_FIREBASE_APP_ID,
 };
 
-//Authentication instance
+//Email and password authentication instance
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export default app;

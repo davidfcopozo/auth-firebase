@@ -7,6 +7,7 @@ import { Dashboard } from "./Dashboard";
 import { Login } from "./Login";
 import ProtectedRoute from "./ProtectedRoute";
 import { ForgotPassword } from "./ForgotPassword";
+import { UpdateProfile } from "./UpdateProfile";
 
 function App() {
   return (
@@ -25,6 +26,15 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  exact
+                  path="/update-profile"
+                  element={
+                    <ProtectedRoute>
+                      <UpdateProfile />
                     </ProtectedRoute>
                   }
                 />

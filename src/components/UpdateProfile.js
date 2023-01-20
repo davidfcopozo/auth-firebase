@@ -3,46 +3,49 @@ import { Form, Card, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export const Signup = () => {
+export const UpdateProfile = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { signup } = useAuth();
+  const { currentUser, emailUpdate, passwordUpdate } = useAuth();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       //We return here so we can stop executing the signup since there was an error
       return setError("Passwords do not match");
     }
+    //empty array of promisses to push the requests and then use the promise.all() function in case we want to update both email and password
+    const promises = [];
 
-    try {
-      setError("");
-      setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
-      navigate("/");
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        setError("Email already in use");
-      } else if (error.code === "auth/invalid-email") {
-        setError("Invalid email");
-      } else if (error.code === "auth/weak-password") {
-        setError("Password should be at least 6 characters");
-      } else if (error.code) {
-        setError("Something went wrong, please try again");
-      }
+    setLoading(true);
+    setError("");
+
+    if (emailRef.current.value !== currentUser.email) {
+      promises.push(emailUpdate(emailRef.current.value));
     }
-    setLoading(false);
+    if (passwordRef.current.value) {
+      promises.push(passwordUpdate(passwordRef.current.value));
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        navigate("/");
+      })
+      .catch(() => {
+        setError("Failed to update the account");
+      })
+      .finally(setLoading(false));
   }
   return (
     <>
       <Card>
         <Card.Body>
-          <h2 className="text-center mb-4">Sign Up</h2>
+          <h2 className="text-center mb-4">Update Profile</h2>
           {error && (
             <Alert variant="danger" className="text-center">
               {error}
@@ -55,25 +58,33 @@ export const Signup = () => {
                 type="email"
                 placeholder="example@email.com"
                 ref={emailRef}
-                required
+                defaultValue={currentUser.email}
               />
             </Form.Group>
             <Form.Group id="password">
               <Form.Label>Password</Form.Label>
-              <Form.Control type="password" ref={passwordRef} required />
+              <Form.Control
+                type="password"
+                ref={passwordRef}
+                placeholder="Leave blank to keep the same"
+              />
             </Form.Group>
             <Form.Group id="password-confirm">
               <Form.Label>Confirm Password</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
+              <Form.Control
+                type="password"
+                ref={passwordConfirmRef}
+                placeholder="Leave blank to keep the same"
+              />
             </Form.Group>
             <Button type="submit" className="w-100 mt-2" disabled={loading}>
-              Sign Up
+              Update
             </Button>
           </Form>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">
-        Already have an account? <Link to="/login">Log In</Link>
+        <Link to="/">Cancel</Link>
       </div>
     </>
   );
