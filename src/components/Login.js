@@ -35,7 +35,10 @@ export const Login = () => {
 
   return (
     <>
-      <Card>
+      <Card
+        style={{ width: "60vw" }}
+        className="d-flex justify-items-center mx-auto"
+      >
         <Card.Body>
           <h2 className="text-center mb-4">Log In</h2>
           {error && (
