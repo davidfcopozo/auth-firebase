@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Form, Card, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import PopupSignInMethods from "./PopupSignInMethods";
 
 export const Signup = () => {
   const emailRef = useRef();
@@ -70,6 +71,10 @@ export const Signup = () => {
               Sign Up
             </Button>
           </Form>
+          <div className="w-100 text-center mt-2">
+            Or sign in with:
+            <PopupSignInMethods />
+          </div>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">

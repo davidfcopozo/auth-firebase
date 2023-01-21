@@ -9,6 +9,7 @@ import {
   updatePassword,
   signInWithPopup,
   GithubAuthProvider,
+  GoogleAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -28,26 +29,12 @@ function AuthProvider({ children }) {
   function githupSingIn() {
     const githupProvider = new GithubAuthProvider();
     //Function with firebase method to sign in with Github
-    signInWithPopup(auth, githupProvider)
-      .then((result) => {
-        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-        const credentials = GithubAuthProvider.credentialFromResult(result);
-        const token = credentials.accessToken;
-
-        //signOut();
-        //console.log(result.user);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(error);
-        // The email of the user's account used.
-        //const email = error.customData.email;
-        // The AuthCredential type that was used.
-        //const credential = new GithubAuthProvider.credentialFromError(error);
-        // ...
-      });
+    return signInWithPopup(auth, githupProvider);
+  }
+  function googleSingIn() {
+    const googleProvider = new GoogleAuthProvider();
+    //Function with firebase method to sign in with Github
+    return signInWithPopup(auth, googleProvider);
   }
 
   //Function with firebase method to create a user with username and password
@@ -99,6 +86,7 @@ function AuthProvider({ children }) {
     emailUpdate,
     passwordUpdate,
     githupSingIn,
+    googleSingIn,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

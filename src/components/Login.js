@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
-import { Form, Card, Button, Alert } from "react-bootstrap";
+import { Form, Card, Button, Alert, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import PopupSignInMethods from "./PopupSignInMethods";
 
 export const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, githupSingIn } = useAuth();
+  const { login } = useAuth();
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -28,19 +29,6 @@ export const Login = () => {
       } else if (error.code) {
         setError("Something went wrong, please try again");
       }
-    }
-    setLoading(false);
-  }
-
-  async function handleGithupSubmit(e) {
-    e.preventDefault();
-    try {
-      setError("");
-      setLoading(true);
-      await githupSingIn();
-      navigate("/");
-    } catch {
-      setError("Failed to sign in");
     }
     setLoading(false);
   }
@@ -69,23 +57,23 @@ export const Login = () => {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
-            <Button type="submit" className="w-100 mt-2" disabled={loading}>
-              Sign In
-            </Button>
+            <Container className="d-flex justify-content-center w-100">
+              <Button type="submit" className=" w-90  mt-2" disabled={loading}>
+                Sign In
+              </Button>
+            </Container>
           </Form>
+          <div className="w-100 text-center mt-2">
+            Or sign in with:
+            <PopupSignInMethods />
+          </div>
+
           <div className="w-100 text-center mt-2">
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
         </Card.Body>
       </Card>
-      <Button
-        type="submit"
-        className="w-100 mt-2"
-        onClick={handleGithupSubmit}
-        disabled={loading}
-      >
-        Github
-      </Button>
+
       <div className="w-100 text-center mt-2">
         Don't have an account yet? <Link to="/signup">Sign up</Link>
       </div>

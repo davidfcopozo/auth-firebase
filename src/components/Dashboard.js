@@ -27,8 +27,9 @@ export const Dashboard = () => {
             {error}
           </Alert>
         )}
-        <strong>Email:</strong>
-        {currentUser && currentUser.email}
+        <strong>Weoclme</strong>{" "}
+        {(currentUser && currentUser.displayName) ||
+          (currentUser && currentUser.email)}
         <Link to="update-profile" className="btn btn-primary w-100 mt-3">
           Update Profile
         </Link>
